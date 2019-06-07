@@ -1,0 +1,39 @@
+# @file docker-compose.yml
+# @author Tyrel Newton
+# @brief Docker Compose file for running the examples in Riviera-PRO and QuestaSim. The Docker
+# images have the following installed:
+# - The simulation tool and version.
+# - Python 3.6.7 or later installed using either yum or apt-get.
+# - VUnit 4.0.8 or later installed using setup.py.
+# The Docker images themselves are assumed to be defined in the .env file. The images
+# should be defined as:
+#   RIVIERA_IMAGE=<registry URL>/<riviera_image_name>
+#   QUESTASIM_IMAGE<registry URL>/<questa_sim_image_name>
+
+version: '3.6'
+
+services:
+  # Run all verification tests using Riviera-PRO. Execute via:
+  # ```bash
+  # docker-compose run riviera_sim
+  # ```
+  riviera_sim:
+    image: ${RIVIERA_IMAGE}:2018.10
+    volumes:
+      - type: bind
+        source: ./
+        target: /work
+    working_dir: /work
+    command: python3 run.py
+  # Run all verification tests using QuestaSim. Execute via:
+  # ```bash
+  # docker-compose run questa_sim
+  # ```
+  questa_sim:
+    image: ${QUESTASIM_IMAGE}:2019.2
+    volumes:
+      - type: bind
+        source: ./
+        target: /work
+    working_dir: /work
+    command: python3 run.py
